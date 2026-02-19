@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُلِم | MULIM</title>
+    <link rel="icon" href="LOGO.jpeg" type="image/jpeg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+        :root {
+            --navy: #141B3C;
+            --teal: #2E7D8A;
+            --teal2: #4AAEBB;
+            --gold: #C9A96E;
+            --cream: #F5F2EC;
+            --deep: #0D1228;
+            --font-main: 'Cairo', sans-serif;
+            --font-display: 'Cormorant Garamond', serif;
+            --easing: cubic-bezier(0.77, 0, 0.18, 1);
+        }
+
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--cream);
+            color: var(--navy);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .mobile-hero-logo {
+                display: block !important;
+                margin: 0 auto 2rem;
+                width: 120px;
+                border-radius: 50%;
+            }
+        }
+
+        .mobile-hero-logo {
+            display: none;
+        }
+
+        .cursor-dot,
+        .cursor-circle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--teal);
+        }
+
+        .cursor-circle {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--navy);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Hide cursor on touch devices */
+        @media (hover: none) {
+
+            .cursor-dot,
+            .cursor-circle {
+                display: none;
+            }
+
+            html {
+                cursor: auto;
+            }
+
+            a {
+                cursor: pointer;
+            }
+        }
+
+        /* PRELOADER */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--deep);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--cream);
+            transition: transform 1s var(--easing);
+        }
+
+        #preloader.loaded {
+            transform: translateY(-100%);
+        }
+
+        .logo-word-img {
+            width: 180px;
+            height: auto;
+            opacity: 0;
+            transform: scale(0.8);
+            border-radius: 12px;
+            animation: logoEnter 1.5s var(--easing) forwards;
+        }
+
+        @keyframes logoEnter {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .logo-sub {
+            font-family: var(--font-display);
+            letter-spacing: 0.3em;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, var(--teal), var(--gold));
+            transform: translateX(100%);
+            /* RTL: start from right */
+            animation: loadBar 3s var(--easing) forwards;
+        }
+
+        @keyframes loadBar {
+            to {
+                transform: translateX(0%);
+            }
+        }
+
+        /* OVERLAY TRANSITION */
+        .page-transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--navy);
+            z-index: 8000;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            pointer-events: none;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(245, 242, 236, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 1rem 5%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.4s ease;
+        }
+
+        .navbar.scrolled .nav-logo {
+            transform: scale(0.88);
+        }
+
+        .nav-logo svg,
+        .nav-logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            mix-blend-mode: multiply;
+        }
+
+        .nav-logo-text h2 {
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: -2px;
+        }
+
+        .nav-logo-text span {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s var(--easing);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--navy);
+            color: var(--cream);
+            padding: 0.8rem 2rem;
+            border-radius: 99px;
+            font-weight: 700;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: var(--teal);
+            transform: translateY(-2px);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            padding: 8rem 5% 4rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-blobs {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--teal);
+            top: -10%;
+            right: -10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--gold);
+            bottom: -20%;
+            left: -10%;
+        }
+
+        .hero-content {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--easing) 3.2s forwards;
+        }
+
+        .eyebrow {
+            color: var(--teal);
+            font-family: var(--font-display);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--navy);
+        }
+
+        .hero-lead {
+            font-size: 1.25rem;
+            color: #555;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 99px;
+            font-weight: 700;
+            cursor: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--cream);
+        }
+
+        .btn-primary:hover {
+            background: var(--teal);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(46, 125, 138, 0.2);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--navy);
+            color: var(--navy);
+        }
+
+        .btn-outline:hover {
+            background: var(--navy);
+            color: var(--cream);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(20, 27, 60, 0.1);
+        }
+
+        .stat-item h3 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--teal);
+        }
+
+        .stat-item p {
+            font-size: 0.9rem;
+            color: #666;
+            font-family: var(--font-display);
+        }
+
+        /* HERO STAGE */
+        .hero-stage {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 3.5s forwards;
+        }
+
+        .stage-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(20, 27, 60, 0.1);
+        }
+
+        .ring-1 {
+            width: 440px;
+            height: 440px;
+            animation: spin 20s linear infinite;
+        }
+
+        .ring-2 {
+            width: 360px;
+            height: 360px;
+            border-color: rgba(46, 125, 138, 0.2);
+            animation: spin 15s linear infinite reverse;
+        }
+
+        .ring-3 {
+            width: 280px;
+            height: 280px;
+            border-color: rgba(201, 169, 110, 0.3);
+            animation: spin 10s linear infinite;
+        }
+
+        .stage-center {
+            width: 220px;
+            height: 220px;
+            background: var(--cream);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+            overflow: hidden;
+            /* Clip contents to circle */
+        }
+
+        .stage-center img {
+            width: 100%;
+            /* Fill the container */
+            height: 100%;
+            object-fit: cover;
+            /* Cover to avid weird scaling */
+            border-radius: 50%;
+            /* Force circle */
+            mix-blend-mode: normal;
+            /* Remove blend mode if edges are bad */
+        }
+
+        .stage-center span {
+            font-family: var(--font-display);
+            color: var(--gold);
+            letter-spacing: 0.2em;
+        }
+
+        .stage-center small {
+            font-size: 0.6rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* MARQUEE */
+        .marquee-section {
+            background: var(--navy);
+            padding: 1.5rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-item {
+            display: inline-block;
+            color: var(--cream);
+            font-size: 1.5rem;
+            margin: 0 2rem;
+            font-weight: 300;
+        }
+
+        .marquee-item span {
+            color: var(--gold);
+            margin-left: 0.5rem;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(50%);
+            }
+        }
+
+        /* RTL direction */
+
+        /* SECTIONS GENERAL */
+        section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .section-label {
+            color: var(--teal);
+            font-family: var(--font-display);
+            font-weight: 600;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: var(--navy);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin: 1rem auto 0;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: #fff;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .service-card.featured {
+            background: var(--navy);
+            color: var(--cream);
+        }
+
+        .service-card.featured p {
+            color: rgba(245, 242, 236, 0.7);
+        }
+
+        .service-card.featured::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--teal) 0%, transparent 70%);
+            opacity: 0.3;
+        }
+
+        /* WHY US */
+        .why-us {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .why-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(46, 125, 138, 0.15);
+            color: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .stats-grid .stat-card:nth-child(even) {
+            transform: translateY(30px);
+        }
+
+        .stat-card h4 {
+            font-size: 2.5rem;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .stat-card span {
+            font-family: var(--font-display);
+            color: #888;
+        }
+
+        /* PROCESS */
+        .process-section {
+            background: var(--navy);
+            color: var(--cream);
+            padding-bottom: 8rem;
+        }
+
+        .process-section .section-title {
+            color: var(--cream);
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 4rem;
+        }
+
+        .steps-line {
+            position: absolute;
+            top: 40px;
+            right: 50px;
+            left: 50px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            cursor: none;
+            width: 200px;
+        }
+
+        .step-circle {
+            width: 80px;
+            height: 80px;
+            background: var(--deep);
+            border: 1px solid var(--teal);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .step-item:hover .step-circle {
+            background: var(--teal);
+            transform: scale(1.2);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .step-item h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* TESTIMONIALS */
+        .testimonials {
+            background: #f9f7f2;
+        }
+
+        .testi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .testi-card {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            transition: transform 0.3s;
+        }
+
+        .testi-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .stars {
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: #ddd;
+            border-radius: 50%;
+        }
+
+        .meta h5 {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .meta span {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* CTA BANNER */
+        .cta-banner {
+            background: radial-gradient(circle at top right, #1f2a50, var(--navy));
+            padding: 6rem 5%;
+            margin: 4rem 5% 0;
+            border-radius: 24px;
+            text-align: center;
+            color: var(--cream);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at bottom left, var(--teal) 0%, transparent 60%);
+            opacity: 0.2;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--cream);
+            padding: 8rem 5% 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-section-watermark {
+            position: absolute;
+            top: 10%;
+            right: -5%;
+            width: 300px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 20px;
+            filter: grayscale(100%);
+        }
+
+        .cta-logo-accent {
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+            pointer-events: none;
+            border-radius: 20px;
+            filter: grayscale(100%) invert(1);
+        }
+
+        .footer-watermark {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .footer-watermark img {
+            width: 250px;
+            opacity: 0.08;
+            filter: grayscale(100%);
+        }
+
+        /* WHATSAPP WIDGET */
+        .whatsapp-box {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            z-index: 9900;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            max-width: 320px;
+            text-align: right;
+            animation: slideInUp 0.5s ease-out 1s backwards;
+        }
+
+        .whatsapp-box h4 {
+            color: var(--teal);
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            /* RTL align */
+            gap: 0.5rem;
+        }
+
+        .whatsapp-box p {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .whatsapp-box a {
+            background: #25D366;
+            color: white;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .whatsapp-box a:hover {
+            transform: translateY(-3px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 4rem;
+        }
+
+        .footer-col h4 {
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-col ul li a {
+            color: #666;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--teal);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(20, 27, 60, 0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* UTILS - ANIMATION REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--easing);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero {
+                padding-top: 6rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                height: auto;
+                padding-top: 8rem;
+            }
+
+            .hero-stage {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+                border: none;
+            }
+
+            .services-grid,
+            .testi-grid,
+            .why-us,
+            .steps-container {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+
+            .steps-line {
+                display: none;
+            }
+
+            .step-item {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .stats-grid .stat-card:nth-child(even) {
+                transform: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-watermark {
+                font-size: 10rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <img src="LOGO.jpeg" alt="MULIM Logo" class="logo-word-img">
+        <div class="logo-sub">MULIM</div>
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- TRANSITION OVERLAY -->
+    <div class="page-transition-overlay"></div>
+
+    <!-- CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="LOGO.jpeg" alt="Logo">
+            <div class="nav-logo-text">
+                <h2>مُلِم</h2>
+                <span>MULIM</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#services">خدماتنا</a>
+            <a href="#why-us">لماذا نحن</a>
+            <a href="#process">كيف نعمل</a>
+            <a href="#testimonials">آراء العملاء</a>
+        </div>
+        <a href="#contact" class="nav-cta">تواصل معنا</a>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-bg-blobs">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+        </div>
+
+        <div class="hero-content">
+            <img src="LOGO.jpeg" class="mobile-hero-logo" alt="Hero Logo">
+            <span class="eyebrow">منصة الخدمات الأولى</span>
+            <h1>شريكك الموثوق<br>في عالم الأعمال</h1>
+            <p class="hero-lead">نقدم حلولاً متكاملة للخدمات الحكومية والاستشارات الإدارية لتمكين أعمالك من النمو في
+                المملكة.</p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary">ابدأ الآن</a>
+                <a href="#services" class="btn btn-outline">اكتشف المزيد</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>+5000</h3>
+                    <p>معاملة منجزة</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>رضا العملاء</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-stage">
+            <div class="stage-circle ring-1"></div>
+            <div class="stage-circle ring-2"></div>
+            <div class="stage-circle ring-3"></div>
+            <div class="stage-center">
+                <img src="LOGO.jpeg" alt="MULIM Center Logo">
+            </div>
+        </div>
+    </header>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-content">
+            <div class="marquee-item">المعاملات الحكومية <span>✦</span></div>
+            <div class="marquee-item">التوثيق الإلكتروني <span>✦</span></div>
+            <div class="marquee-item">تراخيص الأعمال <span>✦</span></div>
+            <div class="marquee-item">استخراج الوثائق <span>✦</span></div>
+            <div class="marquee-item">الاستشارات الإدارية <span>✦</span></div>
+            <div class="marquee-item">الخدمات الرقمية <span>✦</span></div>
+            <!-- Duplicated for seamless loop -->
+            <div class="marquee-item">المعاملات الحكومية <span>✦</span></div>
+            <div class="marquee-item">التوثيق الإلكتروني <span>✦</span></div>
+            <div class="marquee-item">تراخيص الأعمال <span>✦</span></div>
+            <div class="marquee-item">استخراج الوثائق <span>✦</span></div>
+            <div class="marquee-item">الاستشارات الإدارية <span>✦</span></div>
+            <div class="marquee-item">الخدمات الرقمية <span>✦</span></div>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section id="services">
+        <img src="LOGO.jpeg" class="service-section-watermark" alt="">
+        <div class="section-header reveal">
+            <span class="section-label">خدماتنا</span>
+            <h2 class="section-title">حلول متكاملة لأعمالك</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <span class="service-icon">🏛️</span>
+                <h3>المعاملات الحكومية</h3>
+                <p>تخليص كافة المعاملات الحكومية للشركات والأفراد بسرعة وكفاءة.</p>
+            </div>
+            <div class="service-card featured reveal">
+                <span class="service-icon">📄</span>
+                <h3>استخراج الوثائق</h3>
+                <p>إصدار وتجديد الوثائق الرسمية والسجلات التجارية بكل سهولة.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">🏢</span>
+                <h3>تراخيص الأعمال</h3>
+                <p>نساعدك في الحصول على التراخيص اللازمة لبدء نشاطك التجاري.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">✍️</span>
+                <h3>التوثيق والتصديق</h3>
+                <p>خدمات التوثيق المعتمدة للعقود والاتفاقيات الرسمية.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">💻</span>
+                <h3>الخدمات الرقمية</h3>
+                <p>حلول تقنية ورقمية لدعم التحول الرقمي لمنشأتك.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">🎓</span>
+                <h3>الاستشارات الإدارية</h3>
+                <p>استشارات متخصصة لتحسين كفاءة العمل وتطوير الهيكل الإداري.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY US -->
+    <section id="why-us" class="why-us">
+        <div class="why-content reveal">
+            <span class="section-label">لماذا مُلِم؟ <img src="LOGO.jpeg"
+                    style="width:24px; height:24px; vertical-align:middle; margin-right:8px; border-radius:4px; mix-blend-mode:multiply;"
+                    alt=""></span>
+            <h2 class="section-title" style="display:block; width:fit-content; margin:0 0 2rem;">شريكك الاستراتيجي
+                للنجاح</h2>
+            <p style="margin-bottom:2rem; line-height:1.7; color:#555;">نتميز في مُلِم بتقديم خدمات احترافية تجمع بين
+                السرعة والدقة، مع فريق خبير يفهم احتياجاتك ويسعى لتحقيق أهدافك بكفاءة عالية واحترافية مطلقة.</p>
+            <ul class="why-list">
+                <li>
+                    <span class="check-icon">✓</span>
+                    سرعة في الإنجاز ودقة في المواعيد
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    فريق عمل متخصص ذو خبرة عالية
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    تغطية شاملة لجميع الدوائر الحكومية
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    دعم فني واستشاري متواصل
+                </li>
+            </ul>
+        </div>
+        <div class="stats-grid reveal">
+            <div class="stat-card">
+                <h4>+5000</h4>
+                <span>معاملة منجزة</span>
+            </div>
+            <div class="stat-card">
+                <h4>98%</h4>
+                <span>رضا العملاء</span>
+            </div>
+            <div class="stat-card">
+                <h4>+7</h4>
+                <span>سنوات خبرة</span>
+            </div>
+            <div class="stat-card">
+                <h4>24/7</h4>
+                <span>خدمة متواصلة</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" class="process-section">
+        <div class="section-header reveal">
+            <span class="section-label">كيف نعمل</span>
+            <h2 class="section-title">رحلة العميل</h2>
+        </div>
+        <div class="steps-container reveal">
+            <div class="steps-line"></div>
+            <div class="step-item">
+                <div class="step-circle">١</div>
+                <h4>تواصل معنا</h4>
+                <p style="font-size:0.9rem; opacity:0.7;">اشرح لنا احتياجك</p>
+            </div>
+            <div class="step-item">
+                <div class="step-circle">٢</div>
+                <h4>تحديد المتطلبات</h4>
+                <p style="font-size:0.9rem; opacity:0.7;">تجهيز الأوراق اللازمة</p>
+            </div>
+            <div class="step-item">
+                <div class="step-circle">٣</div>
+                <h4>الإنجاز الإلكتروني</h4>
+                <p style="font-size:0.9rem; opacity:0.7;">تنفيذ المعاملة بسرعة</p>
+            </div>
+            <div class="step-item">
+                <div class="step-circle">٤</div>
+                <h4>الاستلام</h4>
+                <p style="font-size:0.9rem; opacity:0.7;">إتمام الخدمة بنجاح</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="testimonials">
+        <div class="section-header reveal">
+            <span class="section-label">آراء العملاء</span>
+            <h2 class="section-title">ماذا يقولون عنا</h2>
+        </div>
+        <div class="testi-grid">
+            <div class="testi-card reveal">
+                <div class="stars">★★★★★</div>
+                <span class="quote">"خدمة ممتازة وسريعة، ساعدوني في تأسيس شركتي في وقت قياسي. شكراً لفريق مُلِم."</span>
+                <div class="testi-author">
+                    <div class="avatar" style="background-color:#eee;"></div>
+                    <div class="meta">
+                        <h5>محمد العتيبي</h5>
+                        <span>رائد أعمال</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card reveal">
+                <div class="stars">★★★★★</div>
+                <span class="quote">"الاحترافية في التعامل والوضوح في الإجراءات هو ما يميزهم. أنصح بشدة بالتعامل
+                    معهم."</span>
+                <div class="testi-author">
+                    <div class="avatar" style="background-color:#eee;"></div>
+                    <div class="meta">
+                        <h5>سارة الأحمد</h5>
+                        <span>مديرة موارد بشرية</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card reveal">
+                <div class="stars">★★★★★</div>
+                <span class="quote">"وفروا علينا الكثير من الوقت والجهد في متابعة المعاملات. فريق متعاون جداً."</span>
+                <div class="testi-author">
+                    <div class="avatar" style="background-color:#eee;"></div>
+                    <div class="meta">
+                        <h5>خالد الدوسري</h5>
+                        <span>المدير العام</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <div class="cta-banner reveal">
+        <img src="LOGO.jpeg" class="cta-logo-accent" alt="">
+        <h2 style="font-size: 2.5rem; margin-bottom:1rem;">جاهز لبدء تجربتك معنا؟</h2>
+        <p style="margin-bottom:2rem; opacity:0.9;">فريقنا مستعد لخدمتك والإجابة على استفساراتك على مدار الساعة</p>
+        <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+            <a href="#" class="btn btn-primary" style="background:#fff; color:var(--navy);">تواصل عبر واتساب 💬</a>
+            <a href="#" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3); color:#fff;">اتصل بنا</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-watermark"><img src="LOGO.jpeg" alt=""></div>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>مُلِم للخدمات</h4>
+                <p style="line-height:1.6; color:#666;">نسعى لتقديم أفضل الخدمات الإلكترونية وحلول الأعمال للارتقاء
+                    بقطاع الأعمال في المملكة.</p>
+            </div>
+            <div class="footer-col">
+                <h4>خدماتنا</h4>
+                <ul>
+                    <li><a href="#">المعاملات الحكومية</a></li>
+                    <li><a href="#">تراخيص الأعمال</a></li>
+                    <li><a href="#">الاستشارات</a></li>
+                    <li><a href="#">التوثيق</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="#">من نحن</a></li>
+                    <li><a href="#">كيف نعمل</a></li>
+                    <li><a href="#">الأسئلة الشائعة</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>تواصل معنا</h4>
+                <ul>
+                    <li><a href="#">info@mulim.sa</a></li>
+                    <li><a href="#">920000000</a></li>
+                    <li><a href="#">الرياض، المملكة العربية السعودية</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>جميع الحقوق محفوظة © 2024 مكتب مُلِم</span>
+            <div class="socials" style="display:flex; gap:1rem;">
+                <a href="#">Twitter</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WHATSAPP WIDGET -->
+    <div class="whatsapp-box">
+        <h4>مختصون في الخدمات العامة 💡</h4>
+        <p>نقدم استشارات مجانية وخدمات متكاملة</p>
+        <a href="https://wa.me/966542115490" target="_blank">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+            </svg>
+            للتواصل / 0542115490
+        </a>
+    </div>
+
+    <script>
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+
+            // Lag effect for circle
+            setTimeout(() => {
+                cursorCircle.style.left = e.clientX + 'px';
+                cursorCircle.style.top = e.clientY + 'px';
+            }, 50);
+        });
+
+        // Hover Effect on Links for Cursor
+        document.querySelectorAll('a, button, .service-card, .step-item').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorCircle.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorCircle.style.borderColor = 'var(--teal)';
+                cursorDot.style.background = 'transparent';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorCircle.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorCircle.style.borderColor = 'var(--navy)';
+                cursorDot.style.background = 'var(--teal)';
+            });
+        });
+
+        // Preloader Exit
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                // Sweep overlay logic could go here, but doing simple slide up for smoothness
+                document.getElementById('preloader').classList.add('loaded');
+
+                // Allow scrolling after load
+                document.body.style.overflowY = 'auto';
+            }, 3000);
+        });
+
+        // Scroll Reveal
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Reveal once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const blobs = document.querySelector('.hero-bg-blobs');
+            const heroContent = document.querySelector('.hero-content');
+
+            if (blobs) blobs.style.transform = `translateY(${scrolled * 0.3}px)`;
+            if (heroContent) heroContent.style.transform = `translateY(${scrolled * 0.1}px)`;
+
+            // Navbar Frosted Effect
+            const navbar = document.querySelector('.navbar');
+            if (scrolled > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Page Transitions (Mock Navigation)
+        const overlay = document.querySelector('.page-transition-overlay');
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+
+                if (targetSection) {
+                    // Animate In
+                    overlay.style.transformOrigin = 'bottom';
+                    overlay.style.transform = 'scaleY(1)';
+                    overlay.style.transition = 'transform 0.4s cubic-bezier(0.77, 0, 0.18, 1)';
+
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'auto'
+                        });
+
+                        // Animate Out
+                        overlay.style.transformOrigin = 'top';
+                        overlay.style.transform = 'scaleY(0)';
+                    }, 400);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
