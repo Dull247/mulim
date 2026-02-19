@@ -59,10 +59,51 @@
         @media (max-width: 900px) {
             .mobile-hero-logo {
                 display: block !important;
-                margin: 0 auto 2rem;
-                width: 120px;
+                margin: 0 auto 1.5rem;
+                width: 100px;
                 border-radius: 50%;
             }
+
+            h1 {
+                font-size: 2.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 2rem !important;
+            }
+
+            section {
+                padding: 4rem 1.5rem !important;
+            }
+
+            .service-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                gap: 1rem !important;
+            }
+
+            .stat-card {
+                padding: 1.5rem !important;
+            }
+
+            .hero-lead {
+                font-size: 1rem !important;
+                margin-bottom: 2rem !important;
+            }
+        }
+
+        .mobile-hero-logo {
+            display: none;
+        }
+
+        display: block !important;
+        margin: 0 auto 2rem;
+        width: 120px;
+        border-radius: 50%;
+        }
         }
 
         .mobile-hero-logo {
@@ -915,72 +956,94 @@
             filter: grayscale(100%);
         }
 
-        /* WHATSAPP WIDGET */
-        .whatsapp-box {
+        /* WHATSAPP WIDGET (COMPACT) */
+        .whatsapp-fab {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            z-index: 9900;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            max-width: 320px;
-            text-align: right;
-            animation: slideInUp 0.5s ease-out 1s backwards;
-        }
-
-        .whatsapp-box h4 {
-            color: var(--teal);
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            /* RTL align */
-            gap: 0.5rem;
-        }
-
-        .whatsapp-box p {
-            font-size: 0.85rem;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .whatsapp-box a {
+            width: 60px;
+            height: 60px;
             background: #25D366;
             color: white;
-            text-align: center;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-weight: 700;
-            margin-top: 0.5rem;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            transition: transform 0.2s;
-            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 9900;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: bounceIn 1s 1s backwards;
         }
 
-        .whatsapp-box a:hover {
-            transform: translateY(-3px);
+        .whatsapp-fab svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
         }
 
-        @keyframes slideInUp {
-            from {
+        .whatsapp-fab:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .whatsapp-fab::after {
+            content: 'تواصل معنا';
+            position: absolute;
+            left: 70px;
+            /* RTL placement */
+            background: #fff;
+            color: var(--navy);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .whatsapp-fab:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @keyframes bounceIn {
+            0% {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: scale(0.3);
             }
 
-            to {
+            50% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1.05);
             }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* RTL Fix for fixed */
+        html[dir="rtl"] .whatsapp-fab {
+            left: 30px;
+            right: auto;
+        }
+
+        html[dir="rtl"] .whatsapp-fab::after {
+            left: 80px;
+            right: auto;
+            transform: translateX(-10px);
+        }
+
+        html[dir="rtl"] .whatsapp-fab:hover::after {
+            transform: translateX(0);
         }
 
         .footer-grid {
@@ -1418,18 +1481,13 @@
         </div>
     </footer>
 
-    <!-- WHATSAPP WIDGET -->
-    <div class="whatsapp-box">
-        <h4>مختصون في الخدمات العامة 💡</h4>
-        <p>نقدم استشارات مجانية وخدمات متكاملة</p>
-        <a href="https://wa.me/966542115490" target="_blank">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path
-                    d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
-            </svg>
-            للتواصل / 0542115490
-        </a>
-    </div>
+    <!-- WHATSAPP WIDGET (COMPACT FAB) -->
+    <a href="https://wa.me/966542115490" target="_blank" class="whatsapp-fab" title="تواصل معنا عبر واتساب">
+        <svg viewBox="0 0 16 16">
+            <path
+                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+        </svg>
+    </a>
 
     <script>
         // Custom Cursor
